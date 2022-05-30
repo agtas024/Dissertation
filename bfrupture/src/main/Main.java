@@ -1,16 +1,21 @@
 package main;
 
 import bruteforce.BruteForce;
+import dosya.Dosya;
 import kombinasyon.Combinations;
-import veriler.Graflar;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
-        List<List<Integer>> mainGraf = diziToList(Graflar.GrafP6Farkli);
+        String dosyaNo = "0";
+        String dosyaAdi = "C7";
+
+        String yol = "C:\\kamp\\tez\\VeriSeti\\table_" + dosyaNo + "\\";
+        List<List<Integer>> mainGraf = Dosya.file(yol + dosyaAdi);
 
         BruteForce bruteForce = new BruteForce();
 

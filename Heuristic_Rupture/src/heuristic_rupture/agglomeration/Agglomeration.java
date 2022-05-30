@@ -1,11 +1,12 @@
 package heuristic_rupture.agglomeration;
 
+import heuristic_rupture.dosya.Dosya;
 import heuristic_rupture.yardimciislemler.Bilesenler;
-import heuristic_rupture.veriler.Graflar;
 import heuristic_rupture.heuristic.HeuristicRuptureDegree;
 import heuristic_rupture.yardimciislemler.EdgeSayici;
 import heuristic_rupture.yardimciislemler.KomsulukListesi;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -13,28 +14,22 @@ import java.util.Collections;
 import java.util.List;
 
 public class Agglomeration {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         List<List<Integer>> Graf = new ArrayList<>();
         ArrayList<Integer> ruptureDereceleri = new ArrayList<>();
         NumberFormat formatter = new DecimalFormat("#0.000000");
-        int array[][] = Graflar.Graf75;
 
-        for (int i = 0; i < array.length; i++) {
-            Graf.add(new ArrayList<>());
-        }
+        String dosyaNo = "2";
+        String dosyaAdi = "20020";
 
-        for (int i = 0; i < array.length; i++) {
-            for (int j = 0; j < array[i].length; j++) {
-                Graf.get(i).add(array[i][j]);
-            }
-        }
-
+        String yol = "C:\\kamp\\tez\\VeriSeti\\table_"+dosyaNo+"\\";
+        Graf = Dosya.file(yol + dosyaAdi);
         System.out.println("ANA GRAF DÜĞÜM SAYISI : " + Graf.size());
         System.out.print("ANA GRAF AYRIT SAYISI : " + new EdgeSayici().sayac(Graf));
         System.out.println("ANA GRAF RUPTURE DERECESİ : " + new HeuristicRuptureDegree().rupture(Graf));
         System.out.println("\n*******************************************************\n");
 
-        float rAv = 0f;
+        int rAv = 0;
         long totalTime = 0;
         for (int i = 0; i < Graf.size(); i++) {
             final long startTime = System.currentTimeMillis();
@@ -49,7 +44,9 @@ public class Agglomeration {
         for (int i = 0; i < ruptureDereceleri.size(); i++) {
             rAv += ruptureDereceleri.get(i);
         }
-        System.out.println("GRAFIN ORTALAMA AGGLOMERATİON SAYISI : " + (rAv / ruptureDereceleri.size()));
+        System.out.println("TÜM RUPTURE'LAR : " + ruptureDereceleri + "\n");
+        System.out.println("AGGLOMERATION RUPTURE SAYISI : " + Collections.max(ruptureDereceleri));
+        System.out.println("GRAFIN ORTALAMA AGGLOMERATİON SAYISI : " + rAv + " ÷ " + ruptureDereceleri.size() + " = " + ((double) rAv / ruptureDereceleri.size()));
         System.out.println("\n--> RUN TİME : " + formatter.format((totalTime) / 1000d) + " SANİYE <--");
     }
 
@@ -141,10 +138,16 @@ public class Agglomeration {
             }
         }
         //yeni graf olustur
+        List<List<Integer>> yeniGraf2 = new ArrayList<>();
+        for (int i = 0; i < graf.size() - agglomerationKumesi.size() + 1; i++) {
+            yeniGraf2.add(new ArrayList<>());
+        }
         int[][] yeniGraf = new int[graf.size() - agglomerationKumesi.size() + 1][graf.size() - agglomerationKumesi.size() + 1];
         for (int i = 0; i < etiketliBilesenler.size(); i++) {//Agglomeration düğümünün komşularının komşuları 0. yani Agglomeration düğümüne komşu olacağı için onları ekledik
             for (int j = 0; j < etiketliBilesenler.get(i).size(); j++) {
                 if (komsular.contains(bilesenler.get(i).get(j))) {
+                    //yeniGraf2.get(0).add(etiketliBilesenler.get(i).get(j) + 0, 1);
+                    //yeniGraf2.get(0 + etiketliBilesenler.get(i).get(j)).add(0, 1);
                     yeniGraf[0][etiketliBilesenler.get(i).get(j)] = 1;
                     yeniGraf[etiketliBilesenler.get(i).get(j)][0] = 1;
                 }
@@ -162,15 +165,31 @@ public class Agglomeration {
                 for (int k = j + 1; k < bilesenler.get(i).size(); k++) {//tüm düğümlerin komşuluk durumlarının incelenmesi
                     int a = graf.get(bilesenler.get(i).get(j)).get(bilesenler.get(i).get(k));
                     yeniGraf[etiketliBilesenler.get(i).get(j)][etiketliBilesenler.get(i).get(k)] = a;
+                    // yeniGraf2.get(etiketliBilesenler.get(i).get(j) + 0).add(etiketliBilesenler.get(i).get(k) + 0, a + 0);
 
                     int b = graf.get(bilesenler.get(i).get(k)).get(bilesenler.get(i).get(j));
                     yeniGraf[etiketliBilesenler.get(i).get(k)][etiketliBilesenler.get(i).get(j)] = b;
+                    //yeniGraf2.get(etiketliBilesenler.get(i).get(k) + 0).add(etiketliBilesenler.get(i).get(j) + 0, b + 0);
                 }
 
             }
         }
         print(yeniGraf, dugum);
-        return HeuristicRuptureDegree.diziToList(yeniGraf);
+        return diziToList(yeniGraf);
+    }
+
+    public static List<List<Integer>> diziToList(int[][] dizi) {
+        List<List<Integer>> list = new ArrayList<>();
+        for (int i = 0; i < dizi.length; i++) {
+            list.add(new ArrayList<>());
+        }
+
+        for (int i = 0; i < dizi.length; i++) {
+            for (int j = 0; j < dizi[i].length; j++) {
+                list.get(i).add(dizi[i][j]);
+            }
+        }
+        return list;
     }
 
     private void print(int[][] yeniGraf, int dugum) {

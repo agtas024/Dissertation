@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class MatrisUreteci {
     public static void main(String[] args) {
-        int uzunluk = 75;
+        int uzunluk = 100;
         Random r = new Random();
         int[][] a = new int[uzunluk][uzunluk];
         for (int i = 0; i < a.length; i++) {

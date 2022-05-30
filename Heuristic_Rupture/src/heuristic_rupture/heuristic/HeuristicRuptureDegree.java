@@ -1,19 +1,24 @@
 package heuristic_rupture.heuristic;
 
+import heuristic_rupture.dosya.Dosya;
 import heuristic_rupture.yardimciislemler.Bilesen_Sayisi;
 import heuristic_rupture.yardimciislemler.Enb_Dugum;
-import heuristic_rupture.veriler.Graflar;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class HeuristicRuptureDegree {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         HeuristicRuptureDegree heuristicRuptureDegree = new HeuristicRuptureDegree();
 
+        String dosyaNo = "0";
+        String dosyaAdi = "GrafCince";
 
-        int R = heuristicRuptureDegree.rupture(diziToList(Graflar.GrafC4Farkli));
+        String yol = "C:\\kamp\\tez\\VeriSeti\\table_"+dosyaNo+"\\";
+        List<List<Integer>> grafim = Dosya.file(yol + dosyaAdi);
+        int R = heuristicRuptureDegree.rupture(grafim);
         System.out.println("\nr(G) = " + R);
     }
 
@@ -160,19 +165,6 @@ public class HeuristicRuptureDegree {
         return dugumler;
     }
 
-    public static List<List<Integer>> diziToList(int[][] dizi) {
-        List<List<Integer>> list = new ArrayList<>();
-        for (int i = 0; i < dizi.length; i++) {
-            list.add(new ArrayList<>());
-        }
-
-        for (int i = 0; i < dizi.length; i++) {
-            for (int j = 0; j < dizi[i].length; j++) {
-                list.get(i).add(dizi[i][j]);
-            }
-        }
-        return list;
-    }
 
     public List<List<Integer>> ayritKopar(List<List<Integer>> grafim, int dugumNo) {
 
