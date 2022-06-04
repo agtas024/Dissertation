@@ -1,23 +1,16 @@
-package main;
+package agglomeration;
 
 import bruteforce.BruteForce;
 import dosya.Dosya;
 import kombinasyon.Combinations;
+import main.Etiketlendirme;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Main {
-
-    public static void main(String[] args) throws IOException {
-
-        String dosyaNo = "0";
-        String dosyaAdi = "GrafSunum";
-
-        String yol = "C:\\kamp\\tez\\VeriSeti\\table_" + dosyaNo + "\\";
-        List<List<Integer>> mainGraf = Dosya.file(yol + dosyaAdi);
-
+public class AggTepeIslemi {
+    static int hesap(List<List<Integer>> mainGraf) {
         BruteForce bruteForce = new BruteForce();
 
         List<Integer> atilanDugumler = new ArrayList<>();
@@ -44,23 +37,19 @@ public class Main {
             for (int j = 0; j < atilanDugumler.size(); j++) {
                 PosRupTumKume.get(i).add(atilanDugumler.get(j));
             }
-        System.out.println("Atılan Düğümler : " + (i + 1) + ". Adım -> " + atilanDugumler);
-        bruteForce.islem(mainGraf, atilanDugumler);
-        atilanDugumler.clear();
+            bruteForce.islem(mainGraf, atilanDugumler);
+            atilanDugumler.clear();
+        }
+        return bruteForce.rupture();
     }
 
-        System.out.println("\nRupture : " + bruteForce.rupture() + "\n");
-        List<List<Integer>> PosRupKume = new ArrayList<>();
-        for (int i = 0; i < bruteForce.ruptureKumesi.size(); i++) {
-            if (bruteForce.ruptureKumesi.get(i) == bruteForce.rupture()) {
-                PosRupKume.add(PosRupTumKume.get(i));
-            }
-        }
-        System.out.println("Rupture Kümeleri : ");
-        System.out.println("-------------------");
-        for (
-                int i = 0; i < PosRupKume.size(); i++) {
-            System.out.println(i + 1 + ". -> " + PosRupKume.get(i));
-        }
+    public static void main(String[] args) throws IOException {
+        String dosyaNo = "0";
+        String dosyaAdi = "GrafSunum";
+
+        String yol = "C:\\kamp\\tez\\VeriSeti\\table_" + dosyaNo + "\\";
+        List<List<Integer>> mainGraf = Dosya.file(yol + dosyaAdi);
+
+        hesap(mainGraf);
     }
 }

@@ -14,7 +14,7 @@ public class HeuristicRuptureDegree {
         HeuristicRuptureDegree heuristicRuptureDegree = new HeuristicRuptureDegree();
 
         String dosyaNo = "0";
-        String dosyaAdi = "GrafCince";
+        String dosyaAdi = "P6";
 
         String yol = "C:\\kamp\\tez\\VeriSeti\\table_"+dosyaNo+"\\";
         List<List<Integer>> grafim = Dosya.file(yol + dosyaAdi);
@@ -86,6 +86,7 @@ public class HeuristicRuptureDegree {
             else S.add(Si);
         }
         System.out.println("\nRupture Düğümleri : " + S);
+        System.out.println("Atılan Düğüm Sayısı : " + S.size());
         return R;
     }
 
